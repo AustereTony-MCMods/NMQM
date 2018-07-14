@@ -1,0 +1,18 @@
+{
+"main": {
+
+    "external_config": true,  
+    "debug_mode": true,
+    "update_checker": true,
+    
+    "mode": 0
+},
+
+"containers": [
+"net.minecraft.inventory.ContainerChest",
+"baubles.common.container.ContainerPlayerExpanded",
+"jds.bibliocraft.containers.ContainerFramedChest",
+"jds.bibliocraft.containers.ContainerGenericShelf",
+"forestry.apiculture.gui.ContainerBeeHousing",
+"forestry.core.gui.ContainerAnalyzer"
+]}
