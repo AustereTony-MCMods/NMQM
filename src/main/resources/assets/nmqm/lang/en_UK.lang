@@ -1,0 +1,13 @@
+nmqm.message.latestContainer=Container name
+
+nmqm.command.noLatest=No latest opened container
+nmqm.command.latest=Last opened container name
+nmqm.command.created=File containers.json created
+nmqm.command.alreadySaved=Latest container name already saved
+nmqm.command.saved=Latest opened container name saved
+nmqm.command.noExternal=External config disabled
+nmqm.command.alreadyUpdated=Latest container name already added to config
+nmqm.command.updated=Latest opened container name added to config
+
+nmqm.update.newVersion=New version available!
+nmqm.update.projectPage=Link

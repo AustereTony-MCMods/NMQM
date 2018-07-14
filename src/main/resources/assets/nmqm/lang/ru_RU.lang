@@ -1,0 +1,14 @@
+﻿nmqm.message.latestContainer=Имя контейнера
+
+nmqm.command.noLatest=Нет недавно открытого контейнера
+nmqm.command.latest=Имя последнего открытого контейнера
+nmqm.command.created=Файл containers.json создан
+nmqm.command.alreadySaved=Имя последнего открытого контейнера уже сохранено
+nmqm.command.saved=Имя последнего открытого контейнера сохранено
+nmqm.command.noExternal=Внешний конфиг отключён
+nmqm.command.alreadyUpdated=Имя последнего открытого контейнера уже добавлено в конфиг
+nmqm.command.updated=Имя последнего открытого контейнера добавлено в конфиг
+
+nmqm.update.newVersion=Доступна новая версия!
+nmqm.update.projectPage=Сайт
+

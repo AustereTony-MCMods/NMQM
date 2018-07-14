@@ -1,0 +1,13 @@
+{
+"main": {
+
+    "external_config": true,  
+    "debug_mode": false,
+    "update_checker": true,
+    
+    "mode": 0
+},
+
+"containers": [
+
+]}
