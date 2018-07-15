@@ -33,13 +33,13 @@ public class CommandNMQM extends CommandBase {
 	USAGE = "/mmqm <latest, save, update>";
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		
 		return NAME;
 	}
 
 	@Override
-	public String getUsage(ICommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		
 		return USAGE;
 	}
@@ -54,7 +54,7 @@ public class CommandNMQM extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
     	
 		if (args.length != 1 || !(args[0].equals("latest") || args[0].equals("save") || args[0].equals("update")))		
-			throw new WrongUsageException(this.getUsage(sender));
+			throw new WrongUsageException(this.getCommandUsage(sender));
 		
 		EntityPlayer player = getCommandSenderAsPlayer(sender);
 		
@@ -67,7 +67,7 @@ public class CommandNMQM extends CommandBase {
 			
 			message1.getStyle().setColor(TextFormatting.RED);
 			
-			player.sendMessage(message1.appendSibling(message2));
+			player.addChatMessage(message1.appendSibling(message2));
 			
 			return;
 		}
@@ -87,7 +87,7 @@ public class CommandNMQM extends CommandBase {
 			message1.getStyle().setColor(TextFormatting.AQUA);
 			containerName.getStyle().setColor(TextFormatting.WHITE);
         	
-        	player.sendMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
+        	player.addChatMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
 		}
 								
 		if (args[0].equals("save")) {
@@ -117,7 +117,7 @@ public class CommandNMQM extends CommandBase {
 						
 						message1.getStyle().setColor(TextFormatting.RED);
 						
-						player.sendMessage(message1.appendSibling(message2));
+						player.addChatMessage(message1.appendSibling(message2));
 						
 						return;
 					}
@@ -143,7 +143,7 @@ public class CommandNMQM extends CommandBase {
 						
 						message1.getStyle().setColor(TextFormatting.GREEN);
 						
-						player.sendMessage(message1.appendSibling(message2));
+						player.addChatMessage(message1.appendSibling(message2));
 					}
 			        
 			        catch (IOException exception) {
@@ -179,7 +179,7 @@ public class CommandNMQM extends CommandBase {
 						
 						message1.getStyle().setColor(TextFormatting.GREEN);
 											
-						player.sendMessage(message1.appendSibling(message2));
+						player.addChatMessage(message1.appendSibling(message2));
 					}
 			        
 			        catch (IOException exception) {
@@ -204,7 +204,7 @@ public class CommandNMQM extends CommandBase {
 				
 				message1.getStyle().setColor(TextFormatting.RED);
 				
-				player.sendMessage(message1.appendSibling(message2));
+				player.addChatMessage(message1.appendSibling(message2));
 				
 				return;
 			}
@@ -230,7 +230,7 @@ public class CommandNMQM extends CommandBase {
 					
 					message1.getStyle().setColor(TextFormatting.RED);
 					
-					player.sendMessage(message1.appendSibling(message2));
+					player.addChatMessage(message1.appendSibling(message2));
 					
 					return;
 				}
@@ -268,7 +268,7 @@ public class CommandNMQM extends CommandBase {
 					
 					message1.getStyle().setColor(TextFormatting.GREEN);
 					
-					player.sendMessage(message1.appendSibling(message2));
+					player.addChatMessage(message1.appendSibling(message2));
 				}
 		        
 		        catch (IOException exception) {

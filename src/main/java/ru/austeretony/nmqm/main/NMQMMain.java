@@ -17,7 +17,7 @@ public class NMQMMain {
 	MODID = "nmqm",
     NAME = "No More Quick Move",
     VERSION = "1.0.0",
-    GAME_VERSION = "1.12.2",
+    GAME_VERSION = "1.9.4",
     VERSIONS_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/NMQM/info/versions.json",
     PROJECT_URL = "https://minecraft.curseforge.com/projects/no-more-quick-move-nmqm";
     

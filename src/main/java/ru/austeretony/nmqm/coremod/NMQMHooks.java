@@ -16,7 +16,7 @@ public class NMQMHooks {
 	
 	public static void getContainerClassName(Container container, EntityPlayer player) {
 		
-		if (!player.world.isRemote) {
+		if (!player.worldObj.isRemote) {
 			
 			String containerClassName = container.getClass().getName();
 						
@@ -33,7 +33,7 @@ public class NMQMHooks {
 				message1.getStyle().setColor(TextFormatting.AQUA);
 				containerName.getStyle().setColor(TextFormatting.WHITE);
             	
-            	player.sendMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
+            	player.addChatMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
 			}
 		}
 	}
@@ -42,7 +42,7 @@ public class NMQMHooks {
 		
 		if (clickType == ClickType.QUICK_MOVE) {
 						
-			String containerClassname = Minecraft.getMinecraft().player.openContainer.getClass().getName();
+			String containerClassname = Minecraft.getMinecraft().thePlayer.openContainer.getClass().getName();
 			
 			if (ConfigLoader.getMode() == 0) {
 				
@@ -64,7 +64,7 @@ public class NMQMHooks {
 				
 		if (clickType == ClickType.QUICK_MOVE) {
 			
-			EntityPlayer player = ((NetHandlerPlayServer) handler).player;
+			EntityPlayer player = ((NetHandlerPlayServer) handler).playerEntity;
 			
 			String containerClassname = player.openContainer.getClass().getName();
 			
