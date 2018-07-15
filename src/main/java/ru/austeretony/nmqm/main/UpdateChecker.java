@@ -11,10 +11,10 @@ import java.net.UnknownHostException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -56,25 +56,40 @@ public class UpdateChecker {
 			
             inputStream.close();
             
-            JsonObject data = remoteData.get(NMQMMain.GAME_VERSION).getAsJsonObject();                     	        
+            JsonObject data;  
+            
+            try {
+            	
+            	data = remoteData.get(NMQMMain.GAME_VERSION).getAsJsonObject();      
+            }
+            
+            catch (NullPointerException exception) {
+            	
+				NMQMMain.LOGGER.error("Update check failed, remote data is undefined for " + NMQMMain.GAME_VERSION + " version.");
+            	
+            	return;
+            }
             
             String availableVersion = data.get("available").getAsString();
             
             if (this.compareVersions(NMQMMain.VERSION, availableVersion)) {	
             	            	
             	ITextComponent 
-            	updateMessage = new TextComponentString("[NMQM] " + I18n.format("nmqm.update.newVersion") + " [" + NMQMMain.VERSION + "/" + availableVersion + "]"),
-            	pageMessage = new TextComponentString(I18n.format("nmqm.update.projectPage") + ": "),
+            	updateMessage1 = new TextComponentString("[NMQM] "),
+                updateMessage2 = new TextComponentTranslation("nmqm.update.newVersion"),
+                updateMessage3 = new TextComponentString(" [" + NMQMMain.VERSION + "/" + availableVersion + "]"),
+            	pageMessage1 = new TextComponentTranslation("nmqm.update.projectPage"),
+                pageMessage2 = new TextComponentString(": "),
             	urlMessage = new TextComponentString(NMQMMain.PROJECT_URL);
             
-            	updateMessage.getStyle().setColor(TextFormatting.AQUA);
-            	pageMessage.getStyle().setColor(TextFormatting.AQUA);
+            	updateMessage1.getStyle().setColor(TextFormatting.AQUA);
+            	pageMessage1.getStyle().setColor(TextFormatting.AQUA);
             	urlMessage.getStyle().setColor(TextFormatting.WHITE);
             	
             	urlMessage.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, urlMessage.getUnformattedText()));
             	
-            	player.sendMessage(updateMessage);
-            	player.sendMessage(pageMessage.appendSibling(urlMessage));
+            	player.addChatMessage(updateMessage1.appendSibling(updateMessage2).appendSibling(updateMessage3));
+            	player.addChatMessage(pageMessage1.appendSibling(pageMessage2).appendSibling(urlMessage));
             }
 		}
 		

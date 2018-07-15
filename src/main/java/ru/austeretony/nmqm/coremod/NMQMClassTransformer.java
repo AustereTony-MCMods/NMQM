@@ -49,20 +49,20 @@ public class NMQMClassTransformer implements IClassTransformer {
     		case "net.minecraft.inventory.Container":   			
     			if (ConfigLoader.isDebugModeEnabled())
     				return patchContainer(basicClass, false);   			
-    		case "afr":   			
+    		case "abd":   			
     			if (ConfigLoader.isDebugModeEnabled())
     				return patchContainer(basicClass, true);
     			
     			
-			case "bmg":					
-				return patchGuiContainer(basicClass, true);		
 			case "net.minecraft.client.gui.inventory.GuiContainer":							
-	    		return patchGuiContainer(basicClass, false);	
+	    		return patchGuiContainer(basicClass, false);
+			case "bgl":					
+				return patchGuiContainer(basicClass, true);			
 	    		
     		
     		case "net.minecraft.network.play.client.CPacketClickWindow":
 				return patchCLickWindowPacket(basicClass, false);
-    		case "lf":
+    		case "ir":
 				return patchCLickWindowPacket(basicClass, true);
     	}
     	
@@ -77,10 +77,10 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    
 	    String 
 	    slotClickMethodName = obfuscated ? "a" : "slotClick",
-	    containerClassName = obfuscated ? "afr" : "net/minecraft/inventory/Container",
-	    itemStackClassName = obfuscated ? "aip" : "net/minecraft/item/ItemStack",
-	    clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	    entityPlayerClassName = obfuscated ? "aed" : "net/minecraft/entity/player/EntityPlayer";
+	    containerClassName = obfuscated ? "abd" : "net/minecraft/inventory/Container",
+	    itemStackClassName = obfuscated ? "adz" : "net/minecraft/item/ItemStack",
+	    clickTypeClassName = obfuscated ? "abi" : "net/minecraft/inventory/ClickType",
+	    entityPlayerClassName = obfuscated ? "zs" : "net/minecraft/entity/player/EntityPlayer";
 	 		    
         boolean isSuccessful = false;
         
@@ -133,8 +133,8 @@ public class NMQMClassTransformer implements IClassTransformer {
         
 	 	String 
 	 	handleMouseClickMethodName = obfuscated ? "a" : "handleMouseClick",
-	 	clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	 	slotClassName = obfuscated ? "agr" : "net/minecraft/inventory/Slot";  
+	 	clickTypeClassName = obfuscated ? "abi" : "net/minecraft/inventory/ClickType",
+	 	slotClassName = obfuscated ? "acc" : "net/minecraft/inventory/Slot";  
 	 	
         boolean isSuccessful = false;
         
@@ -195,9 +195,9 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    String 
 	    modeFieldName = obfuscated ? "f" : "mode",
 	    processPacketMethodName = obfuscated ? "a" : "processPacket",
-	    clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	    iNetHandlerPlayServerClassName = obfuscated ? "kx" : "net/minecraft/network/play/INetHandlerPlayServer",
-	    cPacketClickWindowClassName = obfuscated ? "lf" : "net/minecraft/network/play/client/CPacketClickWindow";
+	    clickTypeClassName = obfuscated ? "abi" : "net/minecraft/inventory/ClickType",
+	    iNetHandlerPlayServerClassName = obfuscated ? "ij" : "net/minecraft/network/play/INetHandlerPlayServer",
+	    cPacketClickWindowClassName = obfuscated ? "ir" : "net/minecraft/network/play/client/CPacketClickWindow";
 	 		    
         boolean isSuccessful = false;
         
