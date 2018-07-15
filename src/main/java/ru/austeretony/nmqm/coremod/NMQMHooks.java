@@ -2,21 +2,20 @@ package ru.austeretony.nmqm.coremod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import ru.austeretony.nmqm.main.ConfigLoader;
 
 public class NMQMHooks {
 	
 	public static void getContainerClassName(Container container, EntityPlayer player) {
 		
-		if (!player.world.isRemote) {
+		if (!player.worldObj.isRemote) {
 			
 			String containerClassName = container.getClass().getName();
 						
@@ -24,60 +23,60 @@ public class NMQMHooks {
 				
 				ConfigLoader.latestContainer = containerClassName;
 				
-				ITextComponent 
-				message1 = new TextComponentString("[NMQM] "),
-				message2 = new TextComponentTranslation("nmqm.message.latestContainer"),
-				message3 = new TextComponentString(": "),
-				containerName = new TextComponentString(containerClassName);
+				IChatComponent 
+				message1 = new ChatComponentText("[NMQM] "),
+				message2 = new ChatComponentTranslation("nmqm.message.latestContainer"),
+				message3 = new ChatComponentText(": "),
+				containerName = new ChatComponentText(containerClassName);
 				
-				message1.getStyle().setColor(TextFormatting.AQUA);
-				containerName.getStyle().setColor(TextFormatting.WHITE);
+				message1.getChatStyle().setColor(EnumChatFormatting.AQUA);
+				containerName.getChatStyle().setColor(EnumChatFormatting.WHITE);
             	
-            	player.sendMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
+            	player.addChatMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
 			}
 		}
 	}
 	
-	public static ClickType verifyQuickMoveClient(ClickType clickType) {
+	public static int verifyQuickMoveClient(int clickType) {
 		
-		if (clickType == ClickType.QUICK_MOVE) {
+		if (clickType == 1) {
 						
-			String containerClassname = Minecraft.getMinecraft().player.openContainer.getClass().getName();
+			String containerClassname = Minecraft.getMinecraft().thePlayer.openContainer.getClass().getName();
 			
 			if (ConfigLoader.getMode() == 0) {
 				
 				if (ConfigLoader.CONTAINERS.contains(containerClassname))
-					clickType = ClickType.PICKUP;
+					clickType = 0;
 			}
 			
 			else if (ConfigLoader.getMode() == 1) {
 				
 				if (!ConfigLoader.CONTAINERS.contains(containerClassname))
-					clickType = ClickType.PICKUP;
+					clickType = 0;
 			}
 		}
 		
 		return clickType;
 	}
 	
-	public static ClickType verifyQuickMoveServer(INetHandlerPlayServer handler, ClickType clickType) {
+	public static int verifyQuickMoveServer(INetHandlerPlayServer handler, int clickType) {
 				
-		if (clickType == ClickType.QUICK_MOVE) {
+		if (clickType == 1) {
 			
-			EntityPlayer player = ((NetHandlerPlayServer) handler).player;
+			EntityPlayer player = ((NetHandlerPlayServer) handler).playerEntity;
 			
 			String containerClassname = player.openContainer.getClass().getName();
 			
 			if (ConfigLoader.getMode() == 0) {
 				
 				if (ConfigLoader.CONTAINERS.contains(containerClassname))
-					clickType = ClickType.PICKUP;
+					clickType = 0;
 			}
 			
 			else if (ConfigLoader.getMode() == 1) {
 				
 				if (!ConfigLoader.CONTAINERS.contains(containerClassname))
-					clickType = ClickType.PICKUP;
+					clickType = 0;
 			}
 		}
 		
