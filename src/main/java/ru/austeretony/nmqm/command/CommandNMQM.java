@@ -13,17 +13,14 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.FMLInjectionData;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import ru.austeretony.nmqm.main.ConfigLoader;
 
 public class CommandNMQM extends CommandBase {
@@ -33,41 +30,39 @@ public class CommandNMQM extends CommandBase {
 	USAGE = "/mmqm <latest, save, update>";
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		
 		return NAME;
 	}
 
 	@Override
-	public String getUsage(ICommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		
 		return USAGE;
 	}
 	
 	@Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
     	
         return true;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
     	
 		if (args.length != 1 || !(args[0].equals("latest") || args[0].equals("save") || args[0].equals("update")))		
-			throw new WrongUsageException(this.getUsage(sender));
+			throw new WrongUsageException(this.getCommandUsage(sender));
 		
 		EntityPlayer player = getCommandSenderAsPlayer(sender);
 		
-		ITextComponent message1, message2, message3;
+		ChatMessageComponent message1, message2, message3;
 		
 		if (ConfigLoader.latestContainer.isEmpty()) {
 			
-			message1 = new TextComponentString("[NMQM] ");
-			message2 = new TextComponentTranslation("nmqm.command.noLatest");
-			
-			message1.getStyle().setColor(TextFormatting.RED);
-			
-			player.sendMessage(message1.appendSibling(message2));
+			message1 = new ChatMessageComponent().addText("[NMQM] ");
+			message2 = new ChatMessageComponent().addKey("nmqm.command.noLatest");
+						
+			player.addChatMessage(message1.appendComponent(message2).toString());
 			
 			return;
 		}
@@ -78,16 +73,13 @@ public class CommandNMQM extends CommandBase {
 		
 		if (args[0].equals("latest")) {
 						
-			message1 = new TextComponentString("[NMQM] ");
-			message2 = new TextComponentTranslation("nmqm.command.latest");
-			message3 = new TextComponentString(": ");
+			message1 = new ChatMessageComponent().addText("[NMQM] ");
+			message2 = new ChatMessageComponent().addKey("nmqm.command.latest");
+			message3 = new ChatMessageComponent().addText(": ");
 			
-			ITextComponent containerName = new TextComponentString(ConfigLoader.latestContainer);
-			
-			message1.getStyle().setColor(TextFormatting.AQUA);
-			containerName.getStyle().setColor(TextFormatting.WHITE);
+			ChatMessageComponent containerName = new ChatMessageComponent().addText(ConfigLoader.latestContainer);
         	
-        	player.sendMessage(message1.appendSibling(message2).appendSibling(message3).appendSibling(containerName));
+        	player.addChatMessage(message1.appendComponent(message2).appendComponent(message3).appendComponent(containerName).toString());
 		}
 								
 		if (args[0].equals("save")) {
@@ -112,12 +104,10 @@ public class CommandNMQM extends CommandBase {
 					
 					if (lastLine.equals(containerClassString)) {
 						
-						message1 = new TextComponentString("[NMQM] ");
-						message2 = new TextComponentTranslation("nmqm.command.alreadySaved");
-						
-						message1.getStyle().setColor(TextFormatting.RED);
-						
-						player.sendMessage(message1.appendSibling(message2));
+						message1 = new ChatMessageComponent().addText("[NMQM] ");
+						message2 = new ChatMessageComponent().addKey("nmqm.command.alreadySaved");
+												
+						player.addChatMessage(message1.appendComponent(message2).toString());
 						
 						return;
 					}
@@ -138,12 +128,10 @@ public class CommandNMQM extends CommandBase {
 				        
 				        fileStream.close();
 				        
-						message1 = new TextComponentString("[NMQM] ");
-						message2 = new TextComponentTranslation("nmqm.command.saved");
-						
-						message1.getStyle().setColor(TextFormatting.GREEN);
-						
-						player.sendMessage(message1.appendSibling(message2));
+						message1 = new ChatMessageComponent().addText("[NMQM] ");
+						message2 = new ChatMessageComponent().addKey("nmqm.command.saved");
+												
+						player.addChatMessage(message1.appendComponent(message2).toString());
 					}
 			        
 			        catch (IOException exception) {
@@ -174,12 +162,10 @@ public class CommandNMQM extends CommandBase {
 				        
 				        fileStream.close();
 				        
-						message1 = new TextComponentString("[NMQN] ");
-						message2 = new TextComponentTranslation("nmqm.command.created");
-						
-						message1.getStyle().setColor(TextFormatting.GREEN);
-											
-						player.sendMessage(message1.appendSibling(message2));
+						message1 = new ChatMessageComponent().addText("[NMQN] ");
+						message2 = new ChatMessageComponent().addKey("nmqm.command.created");
+																	
+						player.addChatMessage(message1.appendComponent(message2).toString());
 					}
 			        
 			        catch (IOException exception) {
@@ -199,12 +185,10 @@ public class CommandNMQM extends CommandBase {
 						
 			if (!ConfigLoader.isExternalConfigEnabled()) {
 				
-				message1 = new TextComponentString("[NMQM] ");
-				message2 = new TextComponentTranslation("nmqm.command.noExternal");
-				
-				message1.getStyle().setColor(TextFormatting.RED);
-				
-				player.sendMessage(message1.appendSibling(message2));
+				message1 = new ChatMessageComponent().addText("[NMQM] ");
+				message2 = new ChatMessageComponent().addKey("nmqm.command.noExternal");
+								
+				player.addChatMessage(message1.appendComponent(message2).toString());
 				
 				return;
 			}
@@ -225,12 +209,10 @@ public class CommandNMQM extends CommandBase {
 									
 				if (lastLine.equals(containerClassString)) {
 					
-					message1 = new TextComponentString("[NMQM] ");
-					message2 = new TextComponentTranslation("nmqm.command.alreadyUpdated");
-					
-					message1.getStyle().setColor(TextFormatting.RED);
-					
-					player.sendMessage(message1.appendSibling(message2));
+					message1 = new ChatMessageComponent().addText("[NMQM] ");
+					message2 = new ChatMessageComponent().addKey("nmqm.command.alreadyUpdated");
+										
+					player.addChatMessage(message1.appendComponent(message2).toString());
 					
 					return;
 				}
@@ -263,12 +245,10 @@ public class CommandNMQM extends CommandBase {
 			        
 			        fileStream.close();
 			        
-					message1 = new TextComponentString("[NMQM] ");
-					message2 = new TextComponentTranslation("nmqm.command.updated");
-					
-					message1.getStyle().setColor(TextFormatting.GREEN);
-					
-					player.sendMessage(message1.appendSibling(message2));
+					message1 = new ChatMessageComponent().addText("[NMQM] ");
+					message2 = new ChatMessageComponent().addKey("nmqm.command.updated");
+										
+					player.addChatMessage(message1.appendComponent(message2).toString());
 				}
 		        
 		        catch (IOException exception) {
@@ -283,6 +263,12 @@ public class CommandNMQM extends CommandBase {
 			} 	
 		}
     }
+
+	@Override
+	public int compareTo(Object arg0) {
+		
+		return 0;
+	}
 }
 
 

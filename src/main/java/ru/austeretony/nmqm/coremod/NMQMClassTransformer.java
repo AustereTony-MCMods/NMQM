@@ -2,8 +2,6 @@ package ru.austeretony.nmqm.coremod;
 
 import java.util.Iterator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -19,10 +17,9 @@ import com.google.gson.JsonSyntaxException;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 import ru.austeretony.nmqm.main.ConfigLoader;
+import ru.austeretony.nmqm.main.NMQMMain;
 
 public class NMQMClassTransformer implements IClassTransformer {
-
-	public static final Logger LOGGER = LogManager.getLogger("NMQM Core");
 	
 	private static final String HOOKS_CLASS = "ru/austeretony/nmqm/coremod/NMQMHooks";
 	
@@ -35,7 +32,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 		
 		catch (JsonSyntaxException exception) {
 			
-			LOGGER.error("Config parsing failure! Fix syntax errors!");
+			NMQMMain.LOGGER.println("[NMQM Core][ERROR] Config parsing failure! Fix syntax errors!");
 			
 			exception.printStackTrace();
 		}
@@ -49,21 +46,21 @@ public class NMQMClassTransformer implements IClassTransformer {
     		case "net.minecraft.inventory.Container":   			
     			if (ConfigLoader.isDebugModeEnabled())
     				return patchContainer(basicClass, false);   			
-    		case "afr":   			
+    		case "uy":   			
     			if (ConfigLoader.isDebugModeEnabled())
     				return patchContainer(basicClass, true);
     			
     			
-			case "bmg":					
-				return patchGuiContainer(basicClass, true);		
 			case "net.minecraft.client.gui.inventory.GuiContainer":							
-	    		return patchGuiContainer(basicClass, false);	
+	    		return patchGuiContainer(basicClass, false);
+			case "awy":					
+				return patchGuiContainer(basicClass, true);			
 	    		
     		
-    		case "net.minecraft.network.play.client.CPacketClickWindow":
-				return patchCLickWindowPacket(basicClass, false);
-    		case "lf":
-				return patchCLickWindowPacket(basicClass, true);
+    		case "net.minecraft.network.packet.Packet102WindowClick":
+				return patchClickWindowPacket(basicClass, false);
+    		case "du":
+				return patchClickWindowPacket(basicClass, true);
     	}
     	
 		return basicClass;
@@ -77,10 +74,9 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    
 	    String 
 	    slotClickMethodName = obfuscated ? "a" : "slotClick",
-	    containerClassName = obfuscated ? "afr" : "net/minecraft/inventory/Container",
-	    itemStackClassName = obfuscated ? "aip" : "net/minecraft/item/ItemStack",
-	    clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	    entityPlayerClassName = obfuscated ? "aed" : "net/minecraft/entity/player/EntityPlayer";
+	    containerClassName = obfuscated ? "uy" : "net/minecraft/inventory/Container",
+	    itemStackClassName = obfuscated ? "ye" : "net/minecraft/item/ItemStack",
+	    entityPlayerClassName = obfuscated ? "uf" : "net/minecraft/entity/player/EntityPlayer";
 	 		    
         boolean isSuccessful = false;
         
@@ -88,7 +84,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 	 		    
 	    for (MethodNode methodNode : classNode.methods) {
 	    	
-			if (methodNode.name.equals(slotClickMethodName) && methodNode.desc.equals("(IIL" + clickTypeClassName + ";L" + entityPlayerClassName + ";)L" + itemStackClassName + ";")) {		
+			if (methodNode.name.equals(slotClickMethodName) && methodNode.desc.equals("(IIIL" + entityPlayerClassName + ";)L" + itemStackClassName + ";")) {		
 	    	
 	            Iterator<AbstractInsnNode> insnIterator = methodNode.instructions.iterator();
 	           
@@ -102,7 +98,7 @@ public class NMQMClassTransformer implements IClassTransformer {
                 
                     	nodesList.add(new VarInsnNode(Opcodes.ALOAD, 0));
                     	nodesList.add(new VarInsnNode(Opcodes.ALOAD, 4));
-                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "getContainerClassName", "(L" + containerClassName + ";L" + entityPlayerClassName + ";)V", false));
+                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "getContainerClassName", "(L" + containerClassName + ";L" + entityPlayerClassName + ";)V"));
 
                         methodNode.instructions.insertBefore(currentInsn, nodesList); 
 
@@ -120,7 +116,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    classNode.accept(writer);
 	    
 	    if (isSuccessful)
-	    	LOGGER.info("<Container.class> patched!");   
+	    	NMQMMain.LOGGER.println("[NMQM Core] <Container.class> patched!");   
 	    	    
 	    return writer.toByteArray();	
 	}
@@ -133,8 +129,7 @@ public class NMQMClassTransformer implements IClassTransformer {
         
 	 	String 
 	 	handleMouseClickMethodName = obfuscated ? "a" : "handleMouseClick",
-	 	clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	 	slotClassName = obfuscated ? "agr" : "net/minecraft/inventory/Slot";  
+	 	slotClassName = obfuscated ? "we" : "net/minecraft/inventory/Slot";  
 	 	
         boolean isSuccessful = false;
         
@@ -144,7 +139,7 @@ public class NMQMClassTransformer implements IClassTransformer {
         
 		for (MethodNode methodNode : classNode.methods) {
 			
-			if (methodNode.name.equals(handleMouseClickMethodName) && methodNode.desc.equals("(L" + slotClassName + ";IIL" + clickTypeClassName + ";)V")) {
+			if (methodNode.name.equals(handleMouseClickMethodName) && methodNode.desc.equals("(L" + slotClassName + ";III)V")) {
                 
                 Iterator<AbstractInsnNode> insnIterator = methodNode.instructions.iterator();
                
@@ -160,9 +155,9 @@ public class NMQMClassTransformer implements IClassTransformer {
                     		
 	                        InsnList nodesList = new InsnList();
 	                    	
-	                        nodesList.add(new VarInsnNode(Opcodes.ALOAD, 4));
-	                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "verifyQuickMoveClient", "(L" + clickTypeClassName + ";)L" + clickTypeClassName + ";", false));          
-	                        nodesList.add(new VarInsnNode(Opcodes.ASTORE, 4));
+	                        nodesList.add(new VarInsnNode(Opcodes.ILOAD, 4));
+	                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "verifyQuickMoveClient", "(I)I"));          
+	                        nodesList.add(new VarInsnNode(Opcodes.ISTORE, 4));
 	                        
 	                        methodNode.instructions.insertBefore(currentInsn, nodesList); 
 	                    	
@@ -181,23 +176,22 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    classNode.accept(writer);
 	    
 	    if (isSuccessful)
-	    	LOGGER.info("<GuiContainer.class> patched!"); 
+	    	NMQMMain.LOGGER.println("[NMQM Core] <GuiContainer.class> patched!"); 
 
         return writer.toByteArray();				
 	}
 	
-	private byte[] patchCLickWindowPacket(byte[] basicClass, boolean obfuscated) {
+	private byte[] patchClickWindowPacket(byte[] basicClass, boolean obfuscated) {
 		
 	    ClassNode classNode = new ClassNode();
 	    ClassReader classReader = new ClassReader(basicClass);
 	    classReader.accept(classNode, 0);
 	    
 	    String 
-	    modeFieldName = obfuscated ? "f" : "mode",
+	    modeFieldName = obfuscated ? "d" : "action",
 	    processPacketMethodName = obfuscated ? "a" : "processPacket",
-	    clickTypeClassName = obfuscated ? "afw" : "net/minecraft/inventory/ClickType",
-	    iNetHandlerPlayServerClassName = obfuscated ? "kx" : "net/minecraft/network/play/INetHandlerPlayServer",
-	    cPacketClickWindowClassName = obfuscated ? "lf" : "net/minecraft/network/play/client/CPacketClickWindow";
+	    iNetHandlerPlayServerClassName = obfuscated ? "ez" : "net/minecraft/network/packet/NetHandler",
+	    cPacketClickWindowClassName = obfuscated ? "du" : "net/minecraft/network/packet/Packet102WindowClick";
 	 		    
         boolean isSuccessful = false;
         
@@ -220,9 +214,9 @@ public class NMQMClassTransformer implements IClassTransformer {
                     	nodesList.add(new VarInsnNode(Opcodes.ALOAD, 0));
                     	nodesList.add(new VarInsnNode(Opcodes.ALOAD, 1));
                     	nodesList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                    	nodesList.add(new FieldInsnNode(Opcodes.GETFIELD, cPacketClickWindowClassName, modeFieldName, "L" + clickTypeClassName + ";"));
-                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "verifyQuickMoveServer", "(L" + iNetHandlerPlayServerClassName + ";L" + clickTypeClassName + ";)L" + clickTypeClassName + ";", false));
-                    	nodesList.add(new FieldInsnNode(Opcodes.PUTFIELD, cPacketClickWindowClassName, modeFieldName, "L" + clickTypeClassName + ";"));
+                    	nodesList.add(new FieldInsnNode(Opcodes.GETFIELD, cPacketClickWindowClassName, modeFieldName, "S"));
+                    	nodesList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOOKS_CLASS, "verifyQuickMoveServer", "(L" + iNetHandlerPlayServerClassName + ";I)I"));
+                    	nodesList.add(new FieldInsnNode(Opcodes.PUTFIELD, cPacketClickWindowClassName, modeFieldName, "S"));
                     	
                         methodNode.instructions.insertBefore(currentInsn, nodesList); 
 
@@ -240,7 +234,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    classNode.accept(writer);
 	    
 	    if (isSuccessful)
-	    	LOGGER.info("<CPacketClickWindow.class> patched!");   
+	    	NMQMMain.LOGGER.println("[NMQM Core] <C0EPacketClickWindow.class> patched!");   
 	    	    
 	    return writer.toByteArray();	
 	}

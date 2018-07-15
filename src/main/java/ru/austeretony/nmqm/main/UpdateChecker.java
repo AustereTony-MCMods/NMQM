@@ -11,24 +11,20 @@ import java.net.UnknownHostException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class UpdateChecker {
 
-	@SubscribeEvent
+	@ForgeSubscribe
 	public void onPlayerJoinedWorld(EntityJoinWorldEvent event) {
 		
-		if (!event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
+		if (!event.world.isRemote && event.entity instanceof EntityPlayer) {
 					
 			if (ConfigLoader.isUpdateCheckerEnabled())				
-				this.checkForUpdates((EntityPlayer) event.getEntity());
+				this.checkForUpdates((EntityPlayer) event.entity);
 		}
 	}
 	
@@ -47,7 +43,7 @@ public class UpdateChecker {
 			
 			catch (UnknownHostException exception) {
 														
-				NMQMMain.LOGGER.error("Update check failed, no internet connection.");
+				NMQMMain.LOGGER.println("[NMQM][ERROR] Update check failed, no internet connection.");
 				
 				return;
 			}
@@ -56,25 +52,30 @@ public class UpdateChecker {
 			
             inputStream.close();
             
-            JsonObject data = remoteData.get(NMQMMain.GAME_VERSION).getAsJsonObject();                     	        
+            JsonObject data;  
+            
+            try {
+            	
+            	data = remoteData.get(NMQMMain.GAME_VERSION).getAsJsonObject();      
+            }
+            
+            catch (NullPointerException exception) {
+            	
+				NMQMMain.LOGGER.println("[NMQM][ERROR] Update check failed, remote data is undefined for " + NMQMMain.GAME_VERSION + " version.");
+            	
+            	return;
+            }
             
             String availableVersion = data.get("available").getAsString();
             
             if (this.compareVersions(NMQMMain.VERSION, availableVersion)) {	
             	            	
-            	ITextComponent 
-            	updateMessage = new TextComponentString("[NMQM] " + I18n.format("nmqm.update.newVersion") + " [" + NMQMMain.VERSION + "/" + availableVersion + "]"),
-            	pageMessage = new TextComponentString(I18n.format("nmqm.update.projectPage") + ": "),
-            	urlMessage = new TextComponentString(NMQMMain.PROJECT_URL);
-            
-            	updateMessage.getStyle().setColor(TextFormatting.AQUA);
-            	pageMessage.getStyle().setColor(TextFormatting.AQUA);
-            	urlMessage.getStyle().setColor(TextFormatting.WHITE);
-            	
-            	urlMessage.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, urlMessage.getUnformattedText()));
-            	
-            	player.sendMessage(updateMessage);
-            	player.sendMessage(pageMessage.appendSibling(urlMessage));
+            	ChatMessageComponent 
+            	updateMessage1 = new ChatMessageComponent().addText("[NMQM] "),
+                updateMessage2 = new ChatMessageComponent().addKey("nmqm.update.newVersion"),
+                updateMessage3 = new ChatMessageComponent().addText(" [" + NMQMMain.VERSION + "/" + availableVersion + "]");
+                        	            	
+            	player.addChatMessage(updateMessage1.appendComponent(updateMessage2).appendComponent(updateMessage3).toString());
             }
 		}
 		
@@ -85,7 +86,7 @@ public class UpdateChecker {
 		
 		catch (FileNotFoundException exception) {
 			
-			NMQMMain.LOGGER.error("Update check failed, remote file is absent.");			
+			NMQMMain.LOGGER.println("[NMQM][ERROR] Update check failed, remote file is absent.");			
 		}
 		
 		catch (IOException exception) {
