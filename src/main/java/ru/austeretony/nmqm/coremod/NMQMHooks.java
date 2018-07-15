@@ -64,7 +64,7 @@ public class NMQMHooks {
 				
 		if (clickType == ClickType.QUICK_MOVE) {
 			
-			EntityPlayer player = ((NetHandlerPlayServer) handler).player;
+			EntityPlayer player = ((NetHandlerPlayServer) handler).playerEntity;
 			
 			String containerClassname = player.openContainer.getClass().getName();
 			
