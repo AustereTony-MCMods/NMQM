@@ -54,10 +54,10 @@ public class NMQMClassTransformer implements IClassTransformer {
     				return patchContainer(basicClass, true);
     			
     			
-			case "bmg":					
-				return patchGuiContainer(basicClass, true);		
 			case "net.minecraft.client.gui.inventory.GuiContainer":							
-	    		return patchGuiContainer(basicClass, false);	
+	    		return patchGuiContainer(basicClass, false);
+			case "bmg":					
+				return patchGuiContainer(basicClass, true);			
 	    		
     		
     		case "net.minecraft.network.play.client.CPacketClickWindow":
