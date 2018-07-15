@@ -19,7 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import net.minecraftforge.fml.relauncher.FMLInjectionData;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 
 public class ConfigLoader {
 	
