@@ -1,2 +1,9 @@
 1.0.0
 +Initial release.
+1.1.0
++Added real time configuration. Any changes now can be applied
+on running server with immediate save and synchronization.
++Fixed visual glitches on client while shift-clicking in containers
+with shift-click prohibition.
++Reworked commands for simple management.
++Updates messages now will be visible only for operators.
