@@ -7,3 +7,5 @@ on running server with immediate save and synchronization.
 with shift-click prohibition.
 +Reworked commands for simple management.
 +Updates messages now will be visible only for operators.
+1.1.1
++Synchronization fixes.
