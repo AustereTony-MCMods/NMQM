@@ -2,6 +2,7 @@ package austeretony.nmqm.common.command;
 
 import austeretony.nmqm.common.main.NMQMDataLoader;
 import austeretony.nmqm.common.network.NetworkHandler;
+import austeretony.nmqm.common.network.client.CPClearContainers;
 import austeretony.nmqm.common.network.client.CPSyncContainer;
 import austeretony.nmqm.common.origin.CommonReference;
 import net.minecraft.command.CommandBase;
@@ -157,8 +158,9 @@ public class CommandNMQM extends CommandBase {
 				NMQMDataLoader.saveContainersData();
 				if (NMQMDataLoader.isClientSyncEnabled()) {
 					for (EntityPlayerMP playerMP : CommonReference.getPlayersListServer()) {
+						NetworkHandler.sendToPlayer(new CPClearContainers(), playerMP);
 						for (String s : NMQMDataLoader.CONTAINERS_SERVER)
-							NetworkHandler.sendToPlayer(new CPSyncContainer(CPSyncContainer.EnumOperation.ADD, s), playerMP);
+							NetworkHandler.sendToPlayer(new CPSyncContainer(s), playerMP);
 					}
 				}
 				msg1 = new TextComponentTranslation("nmqm.command.save");
