@@ -1,6 +1,7 @@
 package austeretony.nmqm.common.network;
 
 import austeretony.nmqm.common.main.NMQMMain;
+import austeretony.nmqm.common.network.client.CPClearContainers;
 import austeretony.nmqm.common.network.client.CPSyncContainer;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -17,6 +18,7 @@ public class NetworkHandler {
 	
 	public static final void registerPackets() {
 		registerMessage(CPSyncContainer.class);
+		registerMessage(CPClearContainers.class);
 	}
 	
 	private static final <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(Class<T> clazz) {

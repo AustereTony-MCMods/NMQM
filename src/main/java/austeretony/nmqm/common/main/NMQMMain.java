@@ -22,7 +22,7 @@ public class NMQMMain {
     public static final String 
 	MODID = "nmqm",
     NAME = "No More Quick Move",
-    VERSION = "1.1.0",
+    VERSION = "1.1.1",
     GAME_VERSION = "1.7.10",
     VERSIONS_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/NMQM/info/versions.json",
     PROJECT_LOCATION = "minecraft.curseforge.com",
