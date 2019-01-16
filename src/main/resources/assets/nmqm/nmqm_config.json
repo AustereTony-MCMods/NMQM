@@ -1,13 +1,8 @@
 {
-"main": {
-
+  "main": {
     "external_config": true,  
-    "debug_mode": false,
+    "client_sync": true,
     "update_checker": true,
-    
     "mode": 0
-},
-
-"containers": [
-
-]}
+  }
+}
