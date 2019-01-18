@@ -9,3 +9,5 @@ with shift-click prohibition.
 +Updates messages now will be visible only for operators.
 1.1.1
 +Synchronization fixes.
+1.1.2
++Performance optimizations.
