@@ -1,13 +1,17 @@
-nmqm.message.latestContainer=Container name
+nmqm.message.latestContainer=Container
 
-nmqm.command.noLatest=No latest opened container
-nmqm.command.latest=Last opened container name
-nmqm.command.created=File containers.json created
-nmqm.command.alreadySaved=Latest container name already saved
-nmqm.command.saved=Latest opened container name saved
-nmqm.command.noExternal=External config disabled
-nmqm.command.alreadyUpdated=Latest container name already added to config
-nmqm.command.updated=Latest opened container name added to config
+nmqm.command.err.debugMode=Configuration mode must be enabled.
+nmqm.command.enable=Configuration mode enabled.
+nmqm.command.list=Containers:
+nmqm.command.list.empty=Empty
+nmqm.command.latest=Latest opened container name:
+nmqm.command.latest.notExist=No latest opened container.
+nmqm.command.add=Added
+nmqm.command.remove=Removed
+nmqm.command.remove.absent=Container is absent in list.
+nmqm.command.clear=Containers list was cleared.
+nmqm.command.save=Changes saved.
+nmqm.command.disable=Configuration mode disabled.
 
 nmqm.update.newVersion=New version available!
 nmqm.update.projectPage=Link
