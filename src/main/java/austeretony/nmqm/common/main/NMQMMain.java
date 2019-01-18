@@ -5,10 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonSyntaxException;
 
-import austeretony.nmqm.common.command.CommandNMQM;
+import austeretony.nmqm.common.commands.CommandNMQM;
 import austeretony.nmqm.common.network.NetworkHandler;
+import austeretony.nmqm.common.network.client.CPShowNMQMMessage;
 import austeretony.nmqm.common.origin.CommonReference;
 import austeretony.nmqm.common.proxy.CommonProxy;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -22,11 +25,11 @@ public class NMQMMain {
     public static final String 
 	MODID = "nmqm",
     NAME = "No More Quick Move",
-    VERSION = "1.1.0",
+    VERSION = "0.1.2",
     GAME_VERSION = "1.11.2",
     VERSIONS_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/NMQM/info/versions.json",
     PROJECT_LOCATION = "minecraft.curseforge.com",
-    PROJECT_URL = "https://minecraft.curseforge.com/projects/no-more-quick-move-nmqm";
+    PROJECT_URL = "https://minecraft.curseforge.com/projects/nmqm";
     
 	@SidedProxy(clientSide = "austeretony.nmqm.common.proxy.ClientProxy", serverSide = "austeretony.nmqm.common.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -56,5 +59,9 @@ public class NMQMMain {
     	CommonReference.registerEvent(new UpdateChecker());
     	new Thread(updateChecker, "NMQM Update Check").start();   		
     	LOGGER.info("Update check started...");
+	}
+	
+	public static void showMessage(EntityPlayer player, EnumNMQMChatMessages msg, String ... args) {
+		NetworkHandler.sendToPlayer(new CPShowNMQMMessage(msg, args), (EntityPlayerMP) player);
 	}
 }

@@ -32,10 +32,10 @@ public class NMQMDataLoader {
 	CONTAINERS_CLIENT = new LinkedHashSet<String>();
  
 	private static boolean 
-	checkForUpdates, 
+	showUpdateMessages, 
 	useExternalConfig, 
 	enableClientSync,
-	enableDebugMode;
+	isConfigModeEnabled;
 	
 	private static int mode;
 
@@ -98,7 +98,7 @@ public class NMQMDataLoader {
 	private static void loadConfigData(JsonObject config, JsonObject containers) {		
         JsonObject mainSettings = config.get("main").getAsJsonObject();       
         enableClientSync = mainSettings.get("client_sync").getAsBoolean();	        
-        checkForUpdates = mainSettings.get("update_checker").getAsBoolean();	        
+        showUpdateMessages = mainSettings.get("update_checker").getAsBoolean();	        
         mode = mainSettings.get("mode").getAsInt();		
     	for (JsonElement element : containers.get("containers").getAsJsonArray())       		
     		CONTAINERS_SERVER.add(element.getAsString());
@@ -120,20 +120,20 @@ public class NMQMDataLoader {
 		}
 	}
 	
-	public static boolean isUpdateCheckeEnabled() {		
-		return checkForUpdates;
+	public static boolean isUpdateMessagesEnabled() {		
+		return showUpdateMessages;
 	}
 	
 	public static boolean isExternalConfigEnabled() {		
 		return useExternalConfig;
 	}
 	
-	public static boolean isDebugModeEnabled() {		
-		return enableDebugMode;
+	public static boolean isConfigModeEnabled() {		
+		return isConfigModeEnabled;
 	}
 	
-	public static void setDebugModeEnabled(boolean isEnabled) {		
-		enableDebugMode = isEnabled;
+	public static void setConfigModeEnabled(boolean isEnabled) {		
+		isConfigModeEnabled = isEnabled;
 	}
 	
 	public static boolean isClientSyncEnabled() {		

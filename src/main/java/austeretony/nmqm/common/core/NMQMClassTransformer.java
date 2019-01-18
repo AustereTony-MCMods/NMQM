@@ -36,8 +36,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 		return basicClass;
     }
 
-    private byte[] patchContainer(byte[] basicClass) {
-		
+    private byte[] patchContainer(byte[] basicClass) {		
 	    ClassNode classNode = new ClassNode();
 	    ClassReader classReader = new ClassReader(basicClass);
 	    classReader.accept(classNode, 0);
@@ -79,8 +78,7 @@ public class NMQMClassTransformer implements IClassTransformer {
 	    return writer.toByteArray();	
 	}
 	
-	private byte[] patchGuiContainer(byte[] basicClass) {
-        
+	private byte[] patchGuiContainer(byte[] basicClass) {       
 	    ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(basicClass);
         classReader.accept(classNode, 0);
@@ -124,8 +122,7 @@ public class NMQMClassTransformer implements IClassTransformer {
         return writer.toByteArray();				
 	}
 	
-	private byte[] patchCLickWindowPacket(byte[] basicClass) {
-		
+	private byte[] patchCLickWindowPacket(byte[] basicClass) {		
 	    ClassNode classNode = new ClassNode();
 	    ClassReader classReader = new ClassReader(basicClass);
 	    classReader.accept(classNode, 0);
