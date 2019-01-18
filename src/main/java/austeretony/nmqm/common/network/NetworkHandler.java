@@ -1,8 +1,8 @@
 package austeretony.nmqm.common.network;
 
 import austeretony.nmqm.common.main.NMQMMain;
-import austeretony.nmqm.common.network.client.CPClearContainers;
-import austeretony.nmqm.common.network.client.CPSyncContainer;
+import austeretony.nmqm.common.network.client.CPShowNMQMMessage;
+import austeretony.nmqm.common.network.client.CPSyncContainers;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,8 +17,8 @@ public class NetworkHandler {
 	private static final SimpleNetworkWrapper DISPATCHER = NetworkRegistry.INSTANCE.newSimpleChannel(NMQMMain.MODID);
 	
 	public static final void registerPackets() {
-		registerMessage(CPSyncContainer.class);
-		registerMessage(CPClearContainers.class);
+		registerMessage(CPSyncContainers.class);
+		registerMessage(CPShowNMQMMessage.class);
 	}
 	
 	private static final <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(Class<T> clazz) {
