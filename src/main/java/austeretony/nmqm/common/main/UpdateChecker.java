@@ -14,11 +14,6 @@ import com.google.gson.JsonParser;
 import austeretony.nmqm.common.origin.CommonReference;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 
 public class UpdateChecker implements Runnable {
 	
@@ -26,21 +21,10 @@ public class UpdateChecker implements Runnable {
 	
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		if (NMQMDataLoader.isUpdateCheckeEnabled() && CommonReference.isOpped(event.player)) {
+		if (NMQMDataLoader.isUpdateMessagesEnabled() && CommonReference.isOpped(event.player)) {
 			if (this.compareVersions(NMQMMain.VERSION, availableVersion)) {	
-	        	IChatComponent 
-	        	updateMessage1 = new ChatComponentText("[NMQM] "),
-	            updateMessage2 = new ChatComponentTranslation("nmqm.update.newVersion"),
-	            updateMessage3 = new ChatComponentText(" [" + NMQMMain.VERSION + "/" + availableVersion + "]"),
-	        	pageMessage1 = new ChatComponentTranslation("nmqm.update.projectPage"),
-	            pageMessage2 = new ChatComponentText(": "),
-	        	urlMessage = new ChatComponentText(NMQMMain.PROJECT_LOCATION);		        
-	        	updateMessage1.getChatStyle().setColor(EnumChatFormatting.AQUA);
-	        	pageMessage1.getChatStyle().setColor(EnumChatFormatting.AQUA);
-	        	urlMessage.getChatStyle().setColor(EnumChatFormatting.WHITE);		        	
-	        	urlMessage.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, NMQMMain.PROJECT_URL));		        	
-	        	event.player.addChatMessage(updateMessage1.appendSibling(updateMessage2).appendSibling(updateMessage3));
-	        	event.player.addChatMessage(pageMessage1.appendSibling(pageMessage2).appendSibling(urlMessage));	        	
+				NMQMMain.showMessage(event.player, EnumNMQMChatMessages.UPDATE_MESSAGE_HEAD, availableVersion);
+				NMQMMain.showMessage(event.player, EnumNMQMChatMessages.UPDATE_MESSAGE_LINK);	        	
 			}
 		}
 	}

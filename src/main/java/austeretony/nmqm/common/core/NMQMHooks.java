@@ -1,32 +1,23 @@
 package austeretony.nmqm.common.core;
 
+import austeretony.nmqm.common.main.EnumNMQMChatMessages;
 import austeretony.nmqm.common.main.NMQMDataLoader;
+import austeretony.nmqm.common.main.NMQMMain;
 import austeretony.nmqm.common.origin.CommonReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 
 public class NMQMHooks {
 	
 	public static void getContainerClassName(Container container, EntityPlayer player) {		
-		if (NMQMDataLoader.isDebugModeEnabled() && CommonReference.isOpped(player) && !player.worldObj.isRemote) {			
+		if (NMQMDataLoader.isConfigModeEnabled() && CommonReference.isOpped(player) && !player.worldObj.isRemote) {			
 			String containerClassName = container.getClass().getName();						
-			if (!NMQMDataLoader.latestContainer.equals(containerClassName)) {				
+			if (!NMQMDataLoader.latestContainer.equals(containerClassName)) {						
 				NMQMDataLoader.latestContainer = containerClassName;
-				IChatComponent 
-				msg1 = new ChatComponentText("[NMQM] "),
-				msg2 = new ChatComponentTranslation("nmqm.message.latestContainer"),
-				msg3 = new ChatComponentText(": "),
-				containerName = new ChatComponentText(containerClassName);				
-				msg1.getChatStyle().setColor(EnumChatFormatting.AQUA);
-				containerName.getChatStyle().setColor(EnumChatFormatting.WHITE);            	
-            	player.addChatMessage(msg1.appendSibling(msg2).appendSibling(msg3).appendSibling(containerName));
+				NMQMMain.showMessage(player, EnumNMQMChatMessages.LATEST_CONTAINER, containerClassName);
 			}
 		}
 	}
