@@ -11,3 +11,7 @@ with shift-click prohibition.
 +Synchronization fixes.
 1.1.2
 +Performance optimizations.
+1.2.0
++Ability to disable/enable containers blacklist.
++New actions and improvements for chat command.
+
