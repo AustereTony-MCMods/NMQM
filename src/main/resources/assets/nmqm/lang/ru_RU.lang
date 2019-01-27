@@ -1,18 +1,38 @@
-﻿nmqm.message.latestContainer=Контейнер
+﻿nmqm.command.help.title=Доступные команды:
+nmqm.command.help.disable=отключить настройки (ограничения).
+nmqm.command.help.enable=включить настройки.
+nmqm.command.help.status=проверить ствтус настроек.
+nmqm.command.help.enable-conf=активировать режим конфигурации.
+nmqm.command.help.disable-conf=отключить режим конфигурации.
+nmqm.command.help.settings=список контейнеров.
+nmqm.command.help.latest=Последний активный контейнер.
+nmqm.command.help.deny=запретить быстрое перемещение.
+nmqm.command.help.allow=разрешить быстрое перемещение.
+nmqm.command.help.clear-all=удалить все настройки.
+nmqm.command.help.save=сохранить текущие настройки.
+nmqm.command.help.backup=сделать бэкап настроек (в файл).
 
-nmqm.command.err.debugMode=Необходимо активировать режим конфигурирования.
-nmqm.command.enable=Режим конфигурирования активирован.
-nmqm.command.list=Контейнеры:
-nmqm.command.list.empty=Пусто
-nmqm.command.latest=Последний открытый контейнер:
-nmqm.command.latest.notExist=Нет недавно открытого контейнера.
-nmqm.command.add=Добавлен
-nmqm.command.remove=Удалён
-nmqm.command.remove.absent=Контейнер отсутствует в списке.
-nmqm.command.clear=Список контейнеров очищен.
-nmqm.command.save=Изменения сохранены.
-nmqm.command.disable=Режим конфигурирования щтключён.
+nmqm.command.err.debugMode=Необходимо активировать режим конфигурации.
+nmqm.command.enable=Настройки активированы.
+nmqm.command.disable=Настройки отключены.
+nmqm.command.status=Настройки
+nmqm.command.enable.conf=Режим конфигурации включён.
+nmqm.command.disable.conf=Режим конфигурации отключён.
+nmqm.command.settings=Контейнеры (быстрое перемещение отключено):
+nmqm.command.settings.empty=Пусто
+nmqm.command.latest=Контейнер
+nmqm.command.latest.notExist=Нет активного контейнера
+nmqm.command.deny=Запрещено
+nmqm.command.allow=Разрешено
+nmqm.command.allow.absent=Нет данных для контейнера.
+nmqm.command.noData=Нет данных.
+nmqm.command.clear.all=Все данные удалены.
+nmqm.command.save=Настройки сохранены.
+nmqm.command.backup=Произведено резервное копирование настроек.
+
+nmqm.status.enabled=активны
+nmqm.status.disabled=неактивны
 
 nmqm.update.newVersion=Доступна новая версия!
-nmqm.update.projectPage=Сайт
+nmqm.update.projectPage=Ссылка
 

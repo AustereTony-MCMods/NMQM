@@ -1,11 +1,10 @@
 package austeretony.nmqm.common.commands;
 
-import austeretony.nmqm.common.main.EnumNMQMChatMessages;
-import austeretony.nmqm.common.main.NMQMDataLoader;
-import austeretony.nmqm.common.main.NMQMMain;
+import austeretony.nmqm.common.main.DataLoader;
+import austeretony.nmqm.common.main.EnumChatMessages;
 import austeretony.nmqm.common.network.NetworkHandler;
 import austeretony.nmqm.common.network.client.CPSyncContainers;
-import austeretony.nmqm.common.origin.CommonReference;
+import austeretony.nmqm.common.reference.CommonReference;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -14,118 +13,138 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CommandNMQM extends CommandBase {
-	
-	public static final String 
-	NAME = "nmqm",
-	USAGE = "/mmqm <enable, list, latest, add, remove, clear, save, disable>";
 
-	@Override
-	public String getCommandName() {		
-		return NAME;
-	}
+    public static final String 
+    NAME = "nmqm",
+    USAGE = "/nmqm <arg>, type </nmqm help> for available arguments.";
 
-	@Override
-	public String getCommandUsage(ICommandSender sender) {		
-		return USAGE;
-	}
-	
-	@Override
+    @Override
+    public String getCommandName() {		
+        return NAME;
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender) {		
+        return USAGE;
+    }
+
+    @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {   	
         return sender instanceof EntityPlayerMP && CommonReference.isOpped((EntityPlayerMP) sender);
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {   	
-		if (args.length != 1 || !(
-				args[0].equals("enable") || 
-				args[0].equals("list") || 
-				args[0].equals("latest") || 
-				args[0].equals("add") || 
-				args[0].equals("remove") || 
-				args[0].equals("clear") || 
-				args[0].equals("save") ||
-				args[0].equals("disable")))		
-			throw new WrongUsageException(this.getCommandUsage(sender));	
-		EntityPlayer player = getCommandSenderAsPlayer(sender);		
-		String[] splittedName = NMQMDataLoader.latestContainer.split("[.]");
-		String shortName = splittedName[splittedName.length - 1];
-		switch(args[0]) {
-			case "enable":
-				NMQMDataLoader.setConfigModeEnabled(true);
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.CONFIGURATION_ENABLED);
-				break;
-			case "disable":
-				NMQMDataLoader.setConfigModeEnabled(false);
-				NMQMDataLoader.latestContainer = "";
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.CONFIGURATION_DISABLED);
-				break;	
-			case "list":
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.CONTAINERS_LIST);
-	        	if (NMQMDataLoader.CONTAINERS_SERVER.isEmpty())
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.EMPTY);
-	        	for (String s : NMQMDataLoader.CONTAINERS_SERVER) 
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.CONTAINER, s);
-				break;
-			case "latest":
-				if (!NMQMDataLoader.isConfigModeEnabled()) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NEED_ENABLE_CONFIGURATION);	
-					return;
-				} else if (NMQMDataLoader.latestContainer.isEmpty()) {			
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NO_LATEST_CONTAINER);			
-					return;
-				}
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.LATEST_CONTAINER, NMQMDataLoader.latestContainer);
-	        	break;
-			case "add":
-				if (!NMQMDataLoader.isConfigModeEnabled()) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NEED_ENABLE_CONFIGURATION);			
-					return;
-				} else if (NMQMDataLoader.latestContainer.isEmpty()) {			
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NO_LATEST_CONTAINER);					
-					return;
-				}
-				NMQMDataLoader.CONTAINERS_SERVER.add(NMQMDataLoader.latestContainer);
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.ADDED_TO_LIST, shortName);					
-	        	break;
-			case "remove":
-				if (!NMQMDataLoader.isConfigModeEnabled()) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NEED_ENABLE_CONFIGURATION);					
-					return;
-				} else if (NMQMDataLoader.latestContainer.isEmpty()) {			
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NO_LATEST_CONTAINER);							
-					return;
-				}
-				if (!NMQMDataLoader.CONTAINERS_SERVER.contains(NMQMDataLoader.latestContainer)) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.CONTAINER_ABSENT);									
-					return;
-				}
-				NMQMDataLoader.CONTAINERS_SERVER.remove(NMQMDataLoader.latestContainer);
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.REMOVED_FROM_LIST, shortName);				
-	        	break;
-			case "save":
-				if (!NMQMDataLoader.isConfigModeEnabled()) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NEED_ENABLE_CONFIGURATION);							
-					return;
-				}
-				NMQMDataLoader.saveContainersData();
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.CHANGES_SAVED);							
-				if (NMQMDataLoader.isClientSyncEnabled())
-					for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
-						NetworkHandler.sendToPlayer(new CPSyncContainers(NMQMDataLoader.CONTAINERS_SERVER), playerMP);
-	        	break;
-			case "clear":
-				if (!NMQMDataLoader.isConfigModeEnabled()) {
-					NMQMMain.showMessage(player, EnumNMQMChatMessages.NEED_ENABLE_CONFIGURATION);							
-					return;
-				}
-				NMQMDataLoader.CONTAINERS_SERVER.clear();
-				NMQMDataLoader.saveContainersData();
-				if (NMQMDataLoader.isClientSyncEnabled())
-					for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
-						NetworkHandler.sendToPlayer(new CPSyncContainers(NMQMDataLoader.CONTAINERS_SERVER), playerMP);
-				NMQMMain.showMessage(player, EnumNMQMChatMessages.CONTAINERS_LIST_CLEARED);							
-	        	break;
-		}
+        EnumCommandNMQMArgs arg;
+        if (args.length != 1 || (arg = EnumCommandNMQMArgs.get(args[0])) == null)  
+            throw new WrongUsageException(this.getCommandUsage(sender));   
+        EntityPlayer player = getCommandSenderAsPlayer(sender);		
+        String[] splittedName = DataLoader.latestContainer.split("[.]");
+        String shortName = splittedName[splittedName.length - 1];
+        switch(arg) {
+        case HELP:
+            EnumChatMessages.COMMAND_HELP.sendMessage(player);
+            break;
+        case ENABLE:
+            DataLoader.setSettingsDisabled(false);
+            if (DataLoader.isClientSyncEnabled())
+                for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
+                    NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.CONTAINERS_SERVER), playerMP);
+            EnumChatMessages.SETTINGS_ENABLED.sendMessage(player);
+            break;
+        case DISABLE:
+            DataLoader.setSettingsDisabled(true);
+            if (DataLoader.isClientSyncEnabled())
+                for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
+                    NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.EMPTY_SET), playerMP);
+            EnumChatMessages.SETTINGS_DISABLED.sendMessage(player);
+            break;  
+        case STATUS:
+            EnumChatMessages.STATUS.sendMessage(player, String.valueOf(DataLoader.isSettingsDisabled()));
+            break;  
+        case ENABLE_CONFIG:
+            DataLoader.setConfigModeEnabled(true);
+            EnumChatMessages.CONFIGURATION_ENABLED.sendMessage(player);
+            break;
+        case DISABLE_CONFIG:
+            DataLoader.setConfigModeEnabled(false);
+            DataLoader.latestContainer = "";
+            EnumChatMessages.CONFIGURATION_DISABLED.sendMessage(player);
+            break;	
+        case SETTINGS:
+            EnumChatMessages.SETTINGS_LIST.sendMessage(player);
+            break;
+        case LATEST:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            } else if (DataLoader.latestContainer.isEmpty()) {   
+                EnumChatMessages.NO_LATEST_CONTAINER.sendMessage(player);
+                return;
+            }
+            EnumChatMessages.LATEST_CONTAINER.sendMessage(player, DataLoader.latestContainer);
+            break;
+        case DENY:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            } else if (DataLoader.latestContainer.isEmpty()) {   
+                EnumChatMessages.NO_LATEST_CONTAINER.sendMessage(player);
+                return;
+            }
+            DataLoader.CONTAINERS_SERVER.add(DataLoader.latestContainer);
+            if (DataLoader.isClientSyncEnabled())
+                NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.CONTAINERS_SERVER), (EntityPlayerMP) player);
+            EnumChatMessages.QUICK_MOVE_DENIED.sendMessage(player, shortName);
+            break;
+        case ALLOW:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            } else if (DataLoader.latestContainer.isEmpty()) {   
+                EnumChatMessages.NO_LATEST_CONTAINER.sendMessage(player);
+                return;
+            }
+            DataLoader.CONTAINERS_SERVER.remove(DataLoader.latestContainer);
+            if (DataLoader.isClientSyncEnabled())
+                NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.CONTAINERS_SERVER), (EntityPlayerMP) player);
+            EnumChatMessages.QUICK_MOVE_ALLOWED.sendMessage(player, shortName);
+            break;
+        case CLEAR_ALL:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            } else if (DataLoader.CONTAINERS_SERVER.isEmpty()) {
+                EnumChatMessages.NO_DATA.sendMessage(player);
+                return;
+            }
+            DataLoader.CONTAINERS_SERVER.clear();
+            DataLoader.saveSettings();
+            if (DataLoader.isClientSyncEnabled())
+                for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
+                    NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.CONTAINERS_SERVER), playerMP);
+            EnumChatMessages.PLANTS_LIST_CLEARED.sendMessage(player);
+            break;
+        case SAVE:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            }
+            DataLoader.saveSettings();
+            if (DataLoader.isClientSyncEnabled())
+                for (EntityPlayerMP playerMP : CommonReference.getPlayersServer())
+                    NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.CONTAINERS_SERVER), playerMP);
+            EnumChatMessages.SETTINGS_SAVED.sendMessage(player);
+            break;
+        case BACKUP:
+            if (!DataLoader.isConfigModeEnabled()) {
+                EnumChatMessages.NEED_ENABLE_CONFIGURATION.sendMessage(player);
+                return;
+            }
+            DataLoader.backupSettings();
+            EnumChatMessages.BACKUP_CREATED.sendMessage(player);
+            break;
+        }
     }
 }
 

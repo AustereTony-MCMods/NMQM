@@ -7,61 +7,54 @@ import com.google.gson.JsonSyntaxException;
 
 import austeretony.nmqm.common.commands.CommandNMQM;
 import austeretony.nmqm.common.network.NetworkHandler;
-import austeretony.nmqm.common.network.client.CPShowNMQMMessage;
-import austeretony.nmqm.common.origin.CommonReference;
 import austeretony.nmqm.common.proxy.CommonProxy;
+import austeretony.nmqm.common.reference.CommonReference;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod(modid = NMQMMain.MODID, name = NMQMMain.NAME, version = NMQMMain.VERSION)
 public class NMQMMain {
-	
+
     public static final String 
-	MODID = "nmqm",
+    MODID = "nmqm",
     NAME = "No More Quick Move",
-    VERSION = "1.1.2",
+    VERSION = "1.2.0",
     GAME_VERSION = "1.7.10",
     VERSIONS_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/NMQM/info/versions.json",
     PROJECT_LOCATION = "minecraft.curseforge.com",
     PROJECT_URL = "https://minecraft.curseforge.com/projects/nmqm";
-    
-	@SidedProxy(clientSide = "austeretony.nmqm.common.proxy.ClientProxy", serverSide = "austeretony.nmqm.common.proxy.CommonProxy")
-	public static CommonProxy proxy;
-    
-	public static final Logger LOGGER = LogManager.getLogger("NMQM");
-        
+
+    @SidedProxy(clientSide = "austeretony.nmqm.common.proxy.ClientProxy", serverSide = "austeretony.nmqm.common.proxy.CommonProxy")
+    public static CommonProxy proxy;
+
+    public static final Logger LOGGER = LogManager.getLogger("NMQM");
+
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) { 	
-		try {			
-			NMQMDataLoader.load();
-		} catch (JsonSyntaxException exception) {			
-			LOGGER.error("Config parsing failure! Fix syntax errors!");			
-			exception.printStackTrace();
-		}
-    	CommonReference.registerCommand(event, new CommandNMQM());
+        try {			
+            DataLoader.load();
+        } catch (JsonSyntaxException exception) {			
+            LOGGER.error("Config parsing failure! Fix syntax errors!");			
+            exception.printStackTrace();
+        }
+        CommonReference.registerCommand(event, new CommandNMQM());
     }
-    
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {	
-		NetworkHandler.registerPackets();
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {	
-		CommonReference.registerFMLEvent(new NMQMServerEvents());
-    	UpdateChecker updateChecker = new UpdateChecker();    		
-    	CommonReference.registerFMLEvent(new UpdateChecker());
-    	new Thread(updateChecker, "NMQM Update Check").start();   		
-    	LOGGER.info("Update check started...");
-	}
-	
-	public static void showMessage(EntityPlayer player, EnumNMQMChatMessages msg, String ... args) {
-		NetworkHandler.sendToPlayer(new CPShowNMQMMessage(msg, args), (EntityPlayerMP) player);
-	}
+
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {	
+        NetworkHandler.registerPackets();
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent event) {	
+        CommonReference.registerFMLEvent(new NMQMServerEvents());
+        UpdateChecker updateChecker = new UpdateChecker();    		
+        CommonReference.registerFMLEvent(new UpdateChecker());
+        new Thread(updateChecker, "NMQM Update Check").start();   		
+        LOGGER.info("Update check started...");
+    }
 }
