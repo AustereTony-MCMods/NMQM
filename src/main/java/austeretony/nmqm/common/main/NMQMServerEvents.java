@@ -8,9 +8,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class NMQMServerEvents {
 
-	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		if (NMQMDataLoader.isClientSyncEnabled())
-			NetworkHandler.sendToPlayer(new CPSyncContainers(NMQMDataLoader.CONTAINERS_SERVER), (EntityPlayerMP) event.player);
-	}
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        if (DataLoader.isClientSyncEnabled())
+            NetworkHandler.sendToPlayer(new CPSyncContainers(DataLoader.isSettingsDisabled() ? DataLoader.EMPTY_SET : DataLoader.CONTAINERS_SERVER), (EntityPlayerMP) event.player);
+    }
 }

@@ -2,9 +2,9 @@
 {
   "modid": "nmqm",
   "name": "No More Quick Move",
-  "description": "Utility to forbid shift-click in specified containers.",
-  "version": "1.1.2",
-  "mcversion": "1.10.2",
+  "description": "Utility to forbid quick moving items (with shift-click) in specified containers.",
+  "version": "1.2.0",
+  "mcversion": "1.11.2",
   "url": "https://minecraft.curseforge.com/projects/nmqm",
   "updateUrl": "",
   "authorList": ["AustereTony"],
