@@ -7,9 +7,9 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 
 @TransformerExclusions({"austeretony.nmqm.common.core"})
 public class NMQMCorePlugin implements IFMLLoadingPlugin {
-		
+
     private static boolean isObfuscated;
-	
+
     @Override
     public String[] getASMTransformerClass() {   	
         return new String[] {NMQMClassTransformer.class.getName()};
@@ -27,15 +27,15 @@ public class NMQMCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-    	isObfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
+        isObfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
     @Override
     public String getAccessTransformerClass() {  	
         return null;
     }
-    
+
     public static boolean isObfuscated() {   	
-    	return isObfuscated;
+        return isObfuscated;
     }
 }
