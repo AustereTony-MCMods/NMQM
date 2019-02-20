@@ -1,0 +1,11 @@
+{
+  "main": {
+    "external_config": true,  
+    "server_only": false,
+    "custom_update_checker": false,
+    "list_mode": 0
+  },
+  "settings": {
+    "enable_autosave": true
+  }
+}

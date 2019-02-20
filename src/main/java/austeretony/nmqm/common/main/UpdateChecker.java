@@ -1,12 +1,10 @@
 package austeretony.nmqm.common.main;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,44 +19,40 @@ public class UpdateChecker implements Runnable {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-        if (DataLoader.isUpdateMessagesEnabled() && CommonReference.isOpped(event.player))
-            if (this.compareVersions(NMQMMain.VERSION, availableVersion)) 
+        if (CommonReference.isOpped(event.player))
+            if (isOutdated(NMQMMain.VERSION, availableVersion)) 
                 EnumChatMessages.UPDATE_MESSAGE.sendMessage(event.player, availableVersion);		
     }
 
     @Override
     public void run() {
-        URL versionsURL;		
-        try {			
-            versionsURL = new URL(NMQMMain.VERSIONS_URL);
-        } catch (MalformedURLException exception) {			
-            exception.printStackTrace();			
+        NMQMMain.LOGGER.info("Update check started...");
+        URL versionsURL;                
+        try {                   
+            versionsURL = new URL(NMQMMain.VERSIONS_CUSTOM_URL);
+        } catch (MalformedURLException exception) {                     
+            exception.printStackTrace();                        
             return;
         }
-        JsonObject remoteData;					
-        try (InputStream inputStream = versionsURL.openStream()) {			
+        JsonObject remoteData;                                  
+        try (InputStream inputStream = versionsURL.openStream()) {                      
             remoteData = (JsonObject) new JsonParser().parse(new InputStreamReader(inputStream, "UTF-8")); 
-        } catch (UnknownHostException exception) {		
-            NMQMMain.LOGGER.error("Update check failed, no internet connection.");		
+        } catch (IOException exception) {               
+            NMQMMain.LOGGER.error("Update check failed!");               
             return;
-        } catch (FileNotFoundException exception) {			
-            NMQMMain.LOGGER.error("Update check failed, remote file is absent.");			
-            return;
-        } catch (IOException exception) {						
-            exception.printStackTrace();			
-            return;
-        }				        
+        }                               
         JsonObject data;          
-        try {        	
+        try {           
             data = remoteData.get(NMQMMain.GAME_VERSION).getAsJsonObject();      
-        } catch (NullPointerException exception) {        	
-            NMQMMain.LOGGER.error("Update check failed, data is undefined for " + NMQMMain.GAME_VERSION + " version.");        	
+        } catch (NullPointerException exception) {              
+            NMQMMain.LOGGER.error("Update check failed, data is undefined for " + NMQMMain.GAME_VERSION + " version.");           
             return;
         }        
         availableVersion = data.get("available").getAsString();
+        NMQMMain.LOGGER.info("Update check ended. Current/available: " + NMQMMain.VERSION + "/" + availableVersion);
     }
 
-    private boolean compareVersions(String currentVersion, String availableVersion) {								
+    public static boolean isOutdated(String currentVersion, String availableVersion) {								
         String[] 
                 cVer = currentVersion.split("[.]"),
                 aVer = availableVersion.split("[.]");				

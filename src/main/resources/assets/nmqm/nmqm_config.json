@@ -1,8 +1,0 @@
-{
-  "main": {
-    "external_config": true,  
-    "client_sync": true,
-    "update_checker": true,
-    "mode": 0
-  }
-}

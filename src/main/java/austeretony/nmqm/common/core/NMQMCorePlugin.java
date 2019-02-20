@@ -3,8 +3,12 @@ package austeretony.nmqm.common.core;
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
+@Name("Plant Biomes Core")
+@MCVersion("1.12.2")
 @TransformerExclusions({"austeretony.nmqm.common.core"})
 public class NMQMCorePlugin implements IFMLLoadingPlugin {
 

@@ -1,9 +1,10 @@
 package austeretony.nmqm.common.core;
 
-import austeretony.nmqm.common.main.DataLoader;
+import austeretony.nmqm.client.reference.ClientReference;
+import austeretony.nmqm.common.config.ConfigLoader;
+import austeretony.nmqm.common.config.EnumConfigSettings;
 import austeretony.nmqm.common.main.EnumChatMessages;
 import austeretony.nmqm.common.reference.CommonReference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -13,23 +14,25 @@ import net.minecraft.network.play.INetHandlerPlayServer;
 public class NMQMHooks {
 
     public static void getContainerClassName(Container container, EntityPlayer player) {		
-        if (DataLoader.isConfigModeEnabled() && CommonReference.isOpped(player) && !player.world.isRemote) {			
-            String containerClassName = container.getClass().getName();						
-            if (!DataLoader.latestContainer.equals(containerClassName)) {				
-                DataLoader.latestContainer = containerClassName;
-                EnumChatMessages.LATEST_CONTAINER.sendMessage(player, containerClassName);
+        if (ConfigLoader.isConfigModeEnabled() && CommonReference.isOpped(player) && !player.world.isRemote) {			
+            String name = container.getClass().getName();						
+            if (!ConfigLoader.latestContainer.equals(name)) {				
+                ConfigLoader.latestContainer = name;
+                EnumChatMessages.COMMAND_NMQM_LATEST.sendMessage(player, name);
             }
         }
     }
 
     public static ClickType verifyQuickMoveClient(ClickType clickType) {
+        if (!ConfigLoader.isSettingsEnabledClient())
+            return clickType;
         if (clickType == ClickType.QUICK_MOVE) {
-            String containerClassname = Minecraft.getMinecraft().player.openContainer.getClass().getName();		
-            if (DataLoader.getMode() == 0) {				
-                if (DataLoader.CONTAINERS_CLIENT.contains(containerClassname))
+            String containerClassname = ClientReference.getClientPlayer().openContainer.getClass().getName();		
+            if (ConfigLoader.getModeClient() == 0) {				
+                if (ConfigLoader.containersClient.contains(containerClassname))
                     clickType = ClickType.PICKUP;
-            } else if (DataLoader.getMode() == 1) {				
-                if (!DataLoader.CONTAINERS_CLIENT.contains(containerClassname))
+            } else {				
+                if (!ConfigLoader.containersClient.contains(containerClassname))
                     clickType = ClickType.PICKUP;
             }
         }		
@@ -37,16 +40,16 @@ public class NMQMHooks {
     }
 
     public static ClickType verifyQuickMoveServer(INetHandlerPlayServer handler, ClickType clickType) {	
-        if (DataLoader.isSettingsDisabled())
+        if (!ConfigLoader.isSettingsEnabled())
             return clickType;
         if (clickType == ClickType.QUICK_MOVE) {	
             EntityPlayer player = ((NetHandlerPlayServer) handler).player;	
             String containerClassname = player.openContainer.getClass().getName();			
-            if (DataLoader.getMode() == 0) {				
-                if (DataLoader.CONTAINERS_SERVER.contains(containerClassname))
+            if (EnumConfigSettings.MODE.getIntValue() == 0) {				
+                if (ConfigLoader.containersServer.contains(containerClassname))
                     clickType = ClickType.PICKUP;
-            } else if (DataLoader.getMode() == 1) {				
-                if (!DataLoader.CONTAINERS_SERVER.contains(containerClassname))
+            } else {				
+                if (!ConfigLoader.containersServer.contains(containerClassname))
                     clickType = ClickType.PICKUP;
             }
         }		

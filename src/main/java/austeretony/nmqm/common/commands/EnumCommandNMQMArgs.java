@@ -8,12 +8,13 @@ public enum EnumCommandNMQMArgs {
     STATUS("status"),
     ENABLE_CONFIG("enable-conf"),
     DISABLE_CONFIG("disable-conf"),
-    SETTINGS("settings"),
+    LIST("list"),
     LATEST("latest"),
     DENY("deny"),
     ALLOW("allow"),
     CLEAR_ALL("clear-all"),
     SAVE("save"),
+    RELOAD("reload"),
     BACKUP("backup");
 
     public final String arg;
