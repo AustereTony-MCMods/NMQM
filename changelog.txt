@@ -1,5 +1,18 @@
-1.0.0
-+Initial release.
+1.2.1
++Mod rewritten and now supports server-only behavior. In server-only mode
+available all mod features. Config contains new parameter "server_only" ("false" by default)
+ - set it to "true" if using it at server only and it will prevent unnecessary synchronization logic.
++Added forge update checker.
++Configuration commands improvements. Added new instruction "reload" - it will allow reload configs to 
+apply manual changes.
++Code cleanup and fixes.
+1.2.0
++Ability to disable/enable containers blacklist.
++New actions and improvements for chat command.
+1.1.2
++Performance optimizations.
+1.1.1
++Synchronization fixes.
 1.1.0
 +Added real time configuration. Any changes now can be applied
 on running server with immediate save and synchronization.
@@ -7,11 +20,8 @@ on running server with immediate save and synchronization.
 with shift-click prohibition.
 +Reworked commands for simple management.
 +Updates messages now will be visible only for operators.
-1.1.1
-+Synchronization fixes.
-1.1.2
-+Performance optimizations.
-1.2.0
-+Ability to disable/enable containers blacklist.
-+New actions and improvements for chat command.
+1.0.0
++Initial release.
+
+
 
